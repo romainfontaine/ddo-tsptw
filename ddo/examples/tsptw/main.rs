@@ -91,11 +91,11 @@ fn main() {
         args.threads.unwrap_or(num_cpus::get())
     );
 
+    let start    = Instant::now();
     if args.log_solution_time {
-        solver = solver.with_logging();
+        solver = solver.with_logging(start);
     }
 
-    let start    = Instant::now();
     let outcome  = solver.maximize();
     let finish   = Instant::now();
 

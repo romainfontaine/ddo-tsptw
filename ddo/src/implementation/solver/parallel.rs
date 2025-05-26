@@ -300,7 +300,7 @@ where D: DecisionDiagram<State = State> + Default,
     /// THIS IS MEANT FOR ROMAIN FONTAINE'S EXPERIMENT ONLY.
     /// the purpose of this field is to log the time & objective value whenever 
     /// an improving solution is found.
-    log_solution_time: bool,
+    log_init_t: Option<Instant>,
     /// This is just a marker that allows us to remember the exact type of the
     /// mdds to be instantiated.
     _phantom: PhantomData<D>, 
@@ -362,15 +362,15 @@ where
                 }),
             },
             nb_threads,
-            log_solution_time: false,
+            log_init_t: None,
             _phantom: Default::default(),
         }
     }
 
     /// Meant for romain fontaine's experiment: 
     /// activates the logging of a solution whenever an improving solution is found.
-    pub fn with_logging(mut self) -> Self {
-        self.log_solution_time = true;
+    pub fn with_logging(mut self, init_t: Instant) -> Self {
+        self.log_init_t = Some(init_t);
         self
     }
 
@@ -389,10 +389,8 @@ where
         let mut critical = self.shared.critical.lock();
         critical.fringe.push(root);
         critical.open_by_layer[0] += 1;
-        
-        if self.log_solution_time {
-            self.shared.start_time = Some(Instant::now());
-        }
+
+        self.shared.start_time = self.log_init_t;
     }
 
     fn root_node(&self) -> SubProblem<State> {
