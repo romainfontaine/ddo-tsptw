@@ -473,8 +473,9 @@ where
             critical.best_sol = mdd.best_exact_solution();
 
             if let Some(t) = shared.start_time {
-                let duration = t.elapsed();
-                println!("({duration:?}) :: {dd_best_value} ")
+                let duration = t.elapsed().as_secs_f32();
+                let v = -dd_best_value;
+                println!("({duration}, {v})")
             }
         }
     }
