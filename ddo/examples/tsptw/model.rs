@@ -116,24 +116,28 @@ impl Problem for Tsptw {
         // Tsptw is a minimization problem but the solver works with a 
         // maximization perspective. So we have to negate the min if we want to
         // yield a lower bound.
-        let twj = self.instance.timewindows[d.value as usize];
         let travel_time = self.min_distance_to(state, d.value as usize);
-        let waiting_time = match state.elapsed {
-            ElapsedTime::FixedAmount{duration} => 
-                if (duration + travel_time) < twj.earliest {
-                    twj.earliest - (duration + travel_time)
-                } else {
-                    0
-                },
-            ElapsedTime::FuzzyAmount{earliest, ..} => 
-                if (earliest + travel_time) < twj.earliest {
-                    twj.earliest - (earliest + travel_time)
-                } else {
-                    0
-                }
-        };
+        if cfg!(feature="travel-time") {
+            -(travel_time as isize)
+        }else{
+            let twj = self.instance.timewindows[d.value as usize];
+            let waiting_time = match state.elapsed {
+                ElapsedTime::FixedAmount{duration} => 
+                    if (duration + travel_time) < twj.earliest {
+                        twj.earliest - (duration + travel_time)
+                    } else {
+                        0
+                    },
+                ElapsedTime::FuzzyAmount{earliest, ..} => 
+                    if (earliest + travel_time) < twj.earliest {
+                        twj.earliest - (earliest + travel_time)
+                    } else {
+                        0
+                    }
+            };
 
-        -( (travel_time + waiting_time) as isize)
+            -( (travel_time + waiting_time) as isize)
+        }
     }
 
     fn next_variable(&self, depth: usize, _: &mut dyn Iterator<Item = &Self::State>)
