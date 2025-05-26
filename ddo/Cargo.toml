@@ -36,3 +36,7 @@ ordered-float    = "3.6.0"
 
 [features]
 travel-time = []
+sz-64 = []
+sz-128 = []
+sz-256 = []
+sz-512 = []

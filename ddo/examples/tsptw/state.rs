@@ -29,7 +29,17 @@ use crate::instance::TimeWindow;
 bitset!(Set512, 512, 128, u128);
 conversion!(Set512, [u128;4]);
 
+#[cfg(feature="sz-64")]
+pub type BitSet = smallbitset::Set64;
+
+#[cfg(feature="sz-128")]
+pub type BitSet = smallbitset::Set128;
+
+#[cfg(feature="sz-256")]
+pub type BitSet = smallbitset::Set256;
+
 /// An alias for the actual type to use.
+#[cfg(feature="sz-512")]
 pub type BitSet = Set512;
 
 /// This represents a state of the problem: 
