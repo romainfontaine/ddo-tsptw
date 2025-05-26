@@ -29,6 +29,7 @@ use heuristics::{TsptwWidth, TsptwRanking};
 use instance::TsptwInstance;
 use model::Tsptw;
 use relax::TsptwRelax;
+use proc_status::ProcStatus;
 
 mod instance;
 mod state;
@@ -108,12 +109,14 @@ fn main() {
     print_solution(&instance, nb_vars, outcome, &lb, &ub, duration, solution);
 }
 fn print_solution(name: &str, n: usize, completion: Completion, lb: &str, ub: &str, duration: Duration, solution: Option<Solution>) {
+    let ps = ProcStatus::read().unwrap();
     println!("instance : {name}");
     println!("status   : {}", status(completion));
     println!("lower bnd: {lb}");
     println!("upper bnd: {ub}");
     println!("duration : {}", duration.as_secs_f32());
     println!("solution : {}", solution_to_string(n, solution));
+    println!("VmPeak   : {}", ps.value_KiB("VmPeak").unwrap());
 }
 fn instance_name<P: AsRef<Path>>(fname: P) -> String {
     let name = fname.as_ref().file_name().unwrap().to_str().unwrap();
