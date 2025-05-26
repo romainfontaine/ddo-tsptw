@@ -84,7 +84,7 @@ impl <B: BufRead> From<Lines<B>> for TsptwInstance {
                let i = (lc - 1) as usize;
                for (j, distance) in line.split_whitespace().enumerate() {
                     let distance = distance.to_string().parse::<f32>().unwrap();
-                    let distance = (distance * 10000.0) as usize;
+                    let distance = (distance) as usize;
                     distances[i][j] = distance;
                }
            }
@@ -94,8 +94,8 @@ impl <B: BufRead> From<Lines<B>> for TsptwInstance {
                let earliest   = tokens.next().unwrap().to_string().parse::<f32>().unwrap();
                let latest     = tokens.next().unwrap().to_string().parse::<f32>().unwrap();
 
-               let earliest   = (earliest * 10000.0) as usize;
-               let latest     = (latest   * 10000.0) as usize;
+               let earliest   = (earliest) as usize;
+               let latest     = (latest) as usize;
 
                let timewindow   = TimeWindow::new(earliest, latest);
                timewindows.push(timewindow);

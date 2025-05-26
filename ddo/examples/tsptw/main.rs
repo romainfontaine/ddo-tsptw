@@ -125,7 +125,7 @@ fn objective(x: isize) -> String {
     match x {
         isize::MIN => "+inf".to_string(),
         isize::MAX => "-inf".to_string(),
-        _ => format!("{:.2}", -(x as f32 / 10_000.0_f32))
+        _ => format!("{}", -(x))
     }
 }
 fn status(completion: Completion) -> &'static str {

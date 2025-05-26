@@ -53,13 +53,13 @@ pub fn solve(instance: &str, width: Option<usize>, threads: Option<usize>) -> f3
 
     outcome
         .best_value
-        .map(|v| -(v as f32) / 10000.0)
+        .map(|v| -(v as f32))
         .unwrap_or(-1.0)
 
     /*if outcome.is_exact {
         outcome
             .best_value
-            .map(|v| -(v as f32) / 10000.0)
+            .map(|v| -(v as f32))
             .unwrap_or(-1.0)
     } else {
         -1.0
