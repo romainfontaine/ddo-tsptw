@@ -658,6 +658,7 @@ where
         if value > critical.best_lb {
             critical.best_sol = Some(solution);
             critical.best_lb  = value;
+            println!("missed improvement?");
         }
     }
     /// Returns the number of nodes that have been explored so far.

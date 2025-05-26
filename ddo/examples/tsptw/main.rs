@@ -30,6 +30,8 @@ use instance::TsptwInstance;
 use model::Tsptw;
 use relax::TsptwRelax;
 use proc_status::ProcStatus;
+use gethostname::gethostname;
+use chrono::prelude::Utc;
 
 mod instance;
 mod state;
@@ -73,6 +75,12 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
+    let instance = instance_name(&args.instance);
+
+    println!("Hostname : {:?}", gethostname());
+    println!("Utc      : {}", Utc::now().to_string());
+    println!("instance : {instance}");
+
     let inst = TsptwInstance::from(File::open(&args.instance).unwrap());
     let pb = Tsptw::new(inst);
     let relax    = TsptwRelax::new(&pb);
@@ -99,18 +107,16 @@ fn main() {
     let outcome  = solver.maximize();
     let finish   = Instant::now();
 
-    let instance = instance_name(&args.instance);
     let nb_vars   = pb.nb_variables();
     let lb       = objective(solver.best_lower_bound());
     let ub       = objective(solver.best_upper_bound());
     let solution = solver.best_solution();
     let duration = finish - start;
 
-    print_solution(&instance, nb_vars, outcome, &lb, &ub, duration, solution);
+    print_solution(nb_vars, outcome, &lb, &ub, duration, solution);
 }
-fn print_solution(name: &str, n: usize, completion: Completion, lb: &str, ub: &str, duration: Duration, solution: Option<Solution>) {
+fn print_solution(n: usize, completion: Completion, lb: &str, ub: &str, duration: Duration, solution: Option<Solution>) {
     let ps = ProcStatus::read().unwrap();
-    println!("instance : {name}");
     println!("status   : {}", status(completion));
     println!("lower bnd: {lb}");
     println!("upper bnd: {ub}");

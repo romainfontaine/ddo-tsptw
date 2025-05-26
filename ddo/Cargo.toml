@@ -20,6 +20,8 @@ binary-heap-plus = "0.5"
 dashmap          = "5.4"
 derive_builder   = "0.12"
 proc-status      = "0.1.1"
+gethostname      = "1.0.2"
+chrono           = "0.4.41"
 
 
 # -- going parallel --------
