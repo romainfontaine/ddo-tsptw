@@ -21,7 +21,7 @@ use std::{sync::Arc, hash::Hash};
 
 use ddo::Dominance;
 
-use crate::state::TsptwState;
+use crate::state::{TsptwState, ElapsedTime};
 
 pub struct TsptwKey(Arc<TsptwState>);
 impl Hash for TsptwKey {
@@ -48,11 +48,26 @@ impl Dominance for TsptwDominance {
     }
 
     fn nb_dimensions(&self, _: &Self::State) -> usize {
-        0
+        // Note: when dominance is "wrong", it fails on this instance:
+        // "./rfo-build/tsptw-tt-64 ~/benchmarks/pes98/rc207.1 -l"
+        if cfg!(feature="travel-time") {
+            1
+        } else {
+            0
+        }
     }
 
-    fn get_coordinate(&self, _: &Self::State, _: usize) -> isize {
-        0
+    fn get_coordinate(&self, s: &Self::State, _: usize) -> isize {
+        if cfg!(feature="travel-time") {
+            match s.elapsed {
+                ElapsedTime::FixedAmount{duration} =>
+                    - (duration as isize),
+                ElapsedTime::FuzzyAmount{earliest, ..} =>
+                    - (earliest as isize)
+            }
+        } else {
+            0
+        }
     }
 
     fn use_value(&self) -> bool {
