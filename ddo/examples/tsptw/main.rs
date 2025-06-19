@@ -112,6 +112,7 @@ fn main() {
     let ub       = objective(solver.best_upper_bound());
     let solution = solver.best_solution();
     let duration = finish - start;
+    println!("explored : {}", solver.explored());
 
     print_solution(nb_vars, outcome, &lb, &ub, duration, solution);
 }
